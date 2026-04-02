@@ -15,14 +15,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isFormPage = pathname.startsWith("/onboarding") || pathname === "/contact";
+  const isFormPage =
+    pathname.startsWith("/onboarding") || pathname === "/contact";
 
-  const navLinks = isFormPage ? [] : [
-    { label: "Features", href: "#features" },
-    { label: "How It Works", href: "#how-it-works" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Pricing", href: "#pricing" },
-  ];
+  const navLinks = isFormPage
+    ? []
+    : [
+        { label: "Features", href: "#features" },
+        { label: "How It Works", href: "#how-it-works" },
+        // { label: "Testimonials", href: "#testimonials" },
+        // { label: "Pricing", href: "#pricing" },
+      ];
 
   return (
     <nav

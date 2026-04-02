@@ -272,7 +272,9 @@ export default function Home() {
             <SignUpButton
               id="hero-cta-primary"
               className="h-[52px] px-8 flex items-center gap-2 text-base font-medium text-white bg-accent-blue rounded-xl hover:bg-accent-blue-hover shadow-xl shadow-accent-blue/25 hover:shadow-accent-blue/40 transition-all duration-300 hover:-translate-y-[2px]"
-            >Sign up for free</SignUpButton>
+            >
+              Sign up for free
+            </SignUpButton>
             <a
               href="#features"
               id="hero-cta-secondary"
@@ -428,7 +430,7 @@ export default function Home() {
       </section>
 
       {/* ════════════════════════ TESTIMONIALS ════════════════════════ */}
-      <section id="testimonials" className="py-24 md:py-32">
+      {/* <section id="testimonials" className="py-24 md:py-32">
         <div className="max-w-7xl mx-auto px-6">
           <AnimateOnScroll className="text-center mb-16">
             <p className="text-sm font-semibold text-accent-blue tracking-wider uppercase mb-4">
@@ -445,7 +447,6 @@ export default function Home() {
             {TESTIMONIALS.map((t, i) => (
               <AnimateOnScroll key={t.name} delay={`delay-${(i + 1) * 200}`}>
                 <div className="group relative p-8 rounded-3xl bg-light-gray border border-transparent hover:border-accent-blue/20 hover:shadow-xl transition-all duration-500">
-                  {/* Stars */}
                   <div className="flex gap-1 mb-6">
                     {[...Array(5)].map((_, j) => (
                       <svg
@@ -479,10 +480,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ════════════════════════ PRICING ════════════════════════ */}
-      <section id="pricing" className="py-24 md:py-32 bg-light-gray">
+      {/* <section id="pricing" className="py-24 md:py-32 bg-light-gray">
         <div className="max-w-6xl mx-auto px-6">
           <AnimateOnScroll className="text-center mb-16">
             <p className="text-sm font-semibold text-accent-blue tracking-wider uppercase mb-4">
@@ -589,7 +590,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ════════════════════════ CTA SECTION ════════════════════════ */}
       <section className="py-24 md:py-32 relative z-10">
@@ -614,7 +615,9 @@ export default function Home() {
               <SignUpButton
                 id="cta-primary"
                 className="h-[56px] px-10 flex items-center gap-2 text-base font-semibold text-accent-blue bg-white rounded-xl hover:bg-light-gray shadow-xl transition-all duration-300 hover:-translate-y-[2px]"
-              >Sign up for free</SignUpButton>
+              >
+                Sign up for free
+              </SignUpButton>
               <a
                 href="/contact"
                 id="cta-secondary"

@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
 export default function CreatorOnboarding() {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     socials: [{ platform: "Instagram", handle: "" }],
@@ -26,6 +29,47 @@ export default function CreatorOnboarding() {
 
   const handleNext = () => setStep(step + 1);
   const handleBack = () => setStep(step - 1);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const socialsText = formData.socials
+        .map((s) => `${s.platform}: ${s.handle}`)
+        .join(", ");
+
+      const payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Creator Application: ${formData.name}`,
+        name: formData.name,
+        message: `
+Creator Application Details:
+- Name: ${formData.name}
+- Followers: ${formData.followers}
+- Niche: ${formData.niche}
+- Equipment: ${formData.equipment || "Not specified"}
+- Socials: ${socialsText}
+        `.trim(),
+      };
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      console.log("Web3Forms response:", result);
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        alert(result.message || "Submission failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error. Please try again.");
+    }
+    setIsSubmitting(false);
+  };
 
   const addSocial = () => {
     setFormData({
@@ -54,6 +98,31 @@ export default function CreatorOnboarding() {
   };
 
   const isStep1Valid = formData.name && formData.socials.every(s => s.handle) && formData.followers;
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-primary-black text-white relative overflow-hidden flex items-center justify-center p-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-blue/10 blur-[120px] pointer-events-none" />
+        <div className="max-w-md w-full bg-white/[0.03] backdrop-blur-xl rounded-[40px] p-12 text-center border border-accent-blue/30 shadow-2xl animate-fade-in">
+           <div className="w-20 h-20 bg-accent-blue rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-accent-blue/30">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+           </div>
+           <h2 className="text-3xl font-extrabold text-white mb-4">You're in!</h2>
+           <p className="text-lg text-white/60 mb-8 max-w-xs mx-auto">
+              Your profile is being reviewed by our curators. We'll be in touch via email soon.
+           </p>
+           <button 
+             onClick={() => window.location.href = "/"}
+             className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold transition-all"
+           >
+             Return Home
+           </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-primary-black text-white relative overflow-hidden pb-20">
@@ -253,8 +322,9 @@ export default function CreatorOnboarding() {
             >
               {step > 1 && (
                 <button
+                  disabled={isSubmitting}
                   onClick={handleBack}
-                  className="px-8 h-14 rounded-2xl font-bold text-white/40 hover:text-white transition-colors"
+                  className="px-8 h-14 rounded-2xl font-bold text-white/40 hover:text-white transition-colors disabled:opacity-0"
                 >
                   Back
                 </button>
@@ -262,16 +332,16 @@ export default function CreatorOnboarding() {
 
               <button
                 onClick={
-                  step === 3 ? () => alert("Welcome to Spacebar!") : handleNext
+                  step === 3 ? handleSubmit : handleNext
                 }
-                disabled={step === 1 && !isStep1Valid}
+                disabled={(step === 1 && !isStep1Valid) || isSubmitting}
                 className={`px-10 h-14 rounded-2xl font-bold text-white transition-all ${
-                  step === 1 && !isStep1Valid
+                  (step === 1 && !isStep1Valid) || isSubmitting
                     ? "bg-white/10 text-white/20 cursor-not-allowed opacity-50"
                     : "bg-accent-blue hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/25 hover:shadow-accent-blue/40"
                 }`}
               >
-                {step === 3 ? "Complete Registration" : "Next Step"}
+                {isSubmitting ? "Submitting..." : step === 3 ? "Complete Registration" : "Next Step"}
               </button>
             </div>
           </div>

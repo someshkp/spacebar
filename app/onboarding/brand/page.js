@@ -3,8 +3,12 @@
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+
 export default function BrandOnboarding() {
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     brandName: "",
     website: "",
@@ -24,8 +28,72 @@ export default function BrandOnboarding() {
   const handleNext = () => setStep(step + 1);
   const handleBack = () => setStep(step - 1);
 
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Brand Application: ${formData.brandName}`,
+        name: formData.brandName,
+        message: `
+Brand Onboarding Details:
+- Brand Name: ${formData.brandName}
+- Website: ${formData.website}
+- Category: ${formData.category}
+- Product: ${formData.productName}
+- Product Details: ${formData.productDetails}
+- Goal: ${formData.goal}
+- Monthly Budget: ${formData.budget}
+        `.trim(),
+      };
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+      console.log("Web3Forms response:", result);
+
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        alert(result.message || "Submission failed. Please try again.");
+      }
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error. Please try again.");
+    }
+    setIsSubmitting(false);
+  };
+
   const isStep1Valid = formData.brandName && formData.website && formData.category;
   const isStep2Valid = formData.productName && formData.productDetails;
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-primary-black text-white relative overflow-hidden flex items-center justify-center p-6">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-blue/10 blur-[120px] pointer-events-none" />
+        <div className="max-w-md w-full bg-white/[0.03] backdrop-blur-xl rounded-[40px] p-12 text-center border border-accent-blue/30 shadow-2xl animate-fade-in">
+          <div className="w-20 h-20 bg-accent-blue rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-accent-blue/30">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <h2 className="text-3xl font-extrabold text-white mb-4">Application Sent!</h2>
+          <p className="text-lg text-white/60 mb-8 max-w-xs mx-auto">
+            We've received your brand details. Our team will reach out within 24 hours.
+          </p>
+          <button
+            onClick={() => window.location.href = "/"}
+            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold transition-all"
+          >
+            Return Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-primary-black text-white relative overflow-hidden">
@@ -244,15 +312,15 @@ export default function BrandOnboarding() {
               )}
               
               <button
-                onClick={step === 4 ? () => alert("Form Submitted!") : handleNext}
-                disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid)}
+                onClick={step === 4 ? handleSubmit : handleNext}
+                disabled={(step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid) || isSubmitting}
                 className={`px-10 h-14 rounded-2xl font-bold text-white transition-all ${
-                   ((step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid))
+                   ((step === 1 && !isStep1Valid) || (step === 2 && !isStep2Valid) || isSubmitting)
                     ? "bg-white/10 text-white/20 cursor-not-allowed" 
                     : "bg-accent-blue hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/25 hover:shadow-accent-blue/40"
                 }`}
               >
-                {step === 4 ? "Submit Details" : "Continue"}
+                {isSubmitting ? "Submitting..." : step === 4 ? "Submit Details" : "Continue"}
               </button>
             </div>
           </div>
