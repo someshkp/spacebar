@@ -8,25 +8,45 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
  */
 export async function submitContactForm(formData) {
   try {
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const company = formData.get("company");
-    const message = formData.get("message");
+    // Collect all entries into a plain object to handle potential Next.js prefixing (e.g., '1_name')
+    const rawData = {};
+    formData.forEach((value, key) => {
+      rawData[key] = value;
+    });
 
-    if (!name || !email || !company) {
-      return { success: false, error: "Missing required fields." };
+    // Helper to get field value regardless of common Next.js prefixes
+    const getField = (name) => {
+      return formData.get(name) || rawData[name] || rawData[`1_${name}`] || rawData[`0_${name}`];
+    };
+
+    const name = getField("name");
+    const email = getField("email");
+    const company = getField("company");
+    const message = getField("message");
+
+    // Ensure we have the required Web3Forms key
+    const key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || process.env.WEB3FORMS_KEY;
+
+    if (!key) {
+      console.error("[SubmitForm] WEB3FORMS_KEY is missing.");
+      return { success: false, error: "Server configuration error (API Key missing)." };
     }
 
+    if (!name || !email || !company) {
+      console.error("[SubmitForm] Validation failed. Data received:", rawData);
+      return { success: false, error: "Please fill in all required fields." };
+    }
+
+    // Build the final payload for Web3Forms
     const payload = new FormData();
-    payload.append("access_key", WEB3FORMS_KEY);
+    payload.append("access_key", key);
     payload.append("subject", `New Demo Booking: ${company}`);
+    payload.append("from_name", name);
     payload.append("name", name);
     payload.append("email", email);
+    payload.append("replyto", email); // Important for replying directly to the user
     payload.append("company", company);
-    payload.append("message", message || "No message provided");
-    // Web3Forms sends specifically to your verified email by default, 
-    // "to" is only for paid tiers or specific configs. 
-    // We'll skip it unless specifically needed to avoid errors.
+    payload.append("message", message || "No extra details provided.");
 
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -36,14 +56,15 @@ export async function submitContactForm(formData) {
     const result = await response.json();
 
     if (result.success) {
+      console.log("[SubmitForm] Web3Forms submission successful for:", email);
       return { success: true };
     } else {
-      console.error("Web3Forms error:", result);
-      return { success: false, error: result.message || "Submission failed." };
+      console.error("[SubmitForm] Web3Forms API Error:", result);
+      return { success: false, error: result.message || "External API submission failed." };
     }
   } catch (error) {
-    console.error("Contact form error:", error?.message || error);
-    return { success: false, error: "Network error. Please try again." };
+    console.error("[SubmitForm] Implementation error:", error);
+    return { success: false, error: "Internal server error. Please try again." };
   }
 }
 

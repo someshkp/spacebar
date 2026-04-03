@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { submitContactForm } from "../actions/submit-form";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,20 +21,32 @@ export default function ContactPage() {
     setError("");
 
     try {
-      // Using the server action instead of client-side fetch
-      const result = await submitContactForm(new FormData(e.target));
+      const form = e.target;
+      const formData = new FormData(form);
+      
+      // Ensure the access key is included (using your verified key from .env)
+      formData.append("access_key", "352acfce-7d4d-41ba-b6c9-12a1cf0f4c63");
+      formData.append("subject", `New Demo Booking: ${formData.get("company")}`);
+      formData.append("from_name", formData.get("name"));
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
       
       if (result.success) {
         setSubmitted(true);
       } else {
-        setError(result.error || "Submission failed.");
+        setError(result.message || "Submission failed. Please check your API key.");
       }
     } catch (err) {
-      console.error("Error:", err);
-      setError("Network error. Please try again.");
+      console.error("Submission Error:", err);
+      setError("Network error. Could not reach Web3Forms.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   return (
