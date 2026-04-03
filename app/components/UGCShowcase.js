@@ -52,44 +52,77 @@ const REEL_METADATA = [
   },
 ];
 
+const CYLINDER_ITEMS = [...REEL_METADATA, ...REEL_METADATA];
+const TOTAL_ITEMS = CYLINDER_ITEMS.length;
+
 export default function UGCShowcase() {
   const [rotation, setRotation] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const scrollRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Set items for the cylinder (2 sets of 5 is plenty for a good cylinder)
-  const cylinderItems = [...REEL_METADATA, ...REEL_METADATA];
-  const totalItems = cylinderItems.length;
   const radius = 500; // Radius of the cylinder
 
-  useEffect(() => {
-    // Update active index based on rotation
-    const angleStep = 360 / totalItems;
-    const currentPos = ((rotation % 360) + 360) % 360;
-    const frontIndex = Math.round(currentPos / angleStep) % totalItems;
-    setActiveIndex(frontIndex);
-  }, [rotation, totalItems]);
+  // Calculate active index based on rotation during render
+  const angleStep = 360 / TOTAL_ITEMS;
+  const currentPos = ((rotation % 360) + 360) % 360;
+  const activeIndex = Math.round(currentPos / angleStep) % TOTAL_ITEMS;
 
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
+
+    let startX = 0;
+    let startY = 0;
+    let isMoving = false;
 
     const handleWheel = (e) => {
       // Check if the user is scrolling vertically
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         // Prevent the page from scrolling
         e.preventDefault();
-
         // Update our rotation state
         setRotation((prev) => prev + e.deltaY * 0.15);
       }
     };
 
-    // Attach to the entire section to make it non-scrollable for the page
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      isMoving = true;
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isMoving) return;
+      
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+
+      // Handle horizontal swipe for rotation
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        e.preventDefault();
+        setRotation((prev) => prev - deltaX * 0.8); // Higher sensitivity for touch
+        startX = currentX;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isMoving = false;
+    };
+
+    // Attach listeners
     el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, [totalItems]);
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchmove", handleTouchMove, { passive: false });
+    el.addEventListener("touchend", handleTouchEnd);
+    
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchmove", handleTouchMove);
+      el.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   return (
     <section ref={sectionRef} className="py-32 bg-white overflow-hidden perspective-[2000px]">
@@ -116,7 +149,6 @@ export default function UGCShowcase() {
         {/* 3D Cylinder Container */}
         <div className="relative h-[700px] flex items-center justify-center mt-12">
           <div
-            ref={scrollRef}
             className="relative w-[320px] h-[480px] cursor-grab active:cursor-grabbing preserve-3d"
             style={{
               transformStyle: "preserve-3d",
@@ -124,8 +156,8 @@ export default function UGCShowcase() {
               transition: "transform 0.1s ease-out",
             }}
           >
-            {cylinderItems.map((reel, i) => {
-              const theta = (360 / totalItems) * i;
+            {CYLINDER_ITEMS.map((reel, i) => {
+              const theta = (360 / TOTAL_ITEMS) * i;
               const isActive = activeIndex === i;
 
               return (
