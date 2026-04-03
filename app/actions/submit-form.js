@@ -1,6 +1,6 @@
 "use server";
 
-const WEB3FORMS_KEY = process.env.WEB3FORMS_ACCESS_KEY;
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 /**
@@ -24,7 +24,9 @@ export async function submitContactForm(formData) {
     payload.append("email", email);
     payload.append("company", company);
     payload.append("message", message || "No message provided");
-    if (ADMIN_EMAIL) payload.append("to", ADMIN_EMAIL);
+    // Web3Forms sends specifically to your verified email by default, 
+    // "to" is only for paid tiers or specific configs. 
+    // We'll skip it unless specifically needed to avoid errors.
 
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",

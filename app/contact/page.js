@@ -22,23 +22,13 @@ export default function ContactPage() {
     setError("");
 
     try {
-      const data = new FormData(e.target);
-      console.warn(data);
-      data.append("access_key", process.env.NEXT_PUBLIC_WEB3FORMS_KEY);
-      data.append("subject", `New Demo Booking: ${formData.company}`);
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: data,
-      });
-
-      const result = await response.json();
-      console.log("Web3Forms response:", result); // open browser console to see this
-
+      // Using the server action instead of client-side fetch
+      const result = await submitContactForm(new FormData(e.target));
+      
       if (result.success) {
         setSubmitted(true);
       } else {
-        setError(result.message || "Submission failed.");
+        setError(result.error || "Submission failed.");
       }
     } catch (err) {
       console.error("Error:", err);
