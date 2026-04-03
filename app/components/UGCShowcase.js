@@ -19,35 +19,35 @@ const REEL_METADATA = [
     name: "Max",
     stars: 5,
     country: "Canada",
-    video: "/ugc1.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc1.mp4",
     category: "tech",
   },
   {
     name: "Sarah",
     stars: 5,
     country: "USA",
-    video: "/ugc2.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc2.mp4",
     category: "cosmetics",
   },
   {
     name: "Elena",
     stars: 5,
     country: "UK",
-    video: "/ugc3.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc3.mp4",
     category: "apparel",
   },
   {
     name: "Arjun",
     stars: 5,
     country: "India",
-    video: "/ugc4.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc4.mp4",
     category: "health",
   },
   {
     name: "Sofia",
     stars: 5,
     country: "Spain",
-    video: "/ugc5.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc5.mp4",
     category: "food",
   },
 ];
@@ -92,7 +92,7 @@ export default function UGCShowcase() {
 
     const handleTouchMove = (e) => {
       if (!isMoving) return;
-      
+
       const currentX = e.touches[0].clientX;
       const currentY = e.touches[0].clientY;
       const deltaX = currentX - startX;
@@ -115,7 +115,7 @@ export default function UGCShowcase() {
     el.addEventListener("touchstart", handleTouchStart, { passive: true });
     el.addEventListener("touchmove", handleTouchMove, { passive: false });
     el.addEventListener("touchend", handleTouchEnd);
-    
+
     return () => {
       el.removeEventListener("wheel", handleWheel);
       el.removeEventListener("touchstart", handleTouchStart);
@@ -125,7 +125,10 @@ export default function UGCShowcase() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-32 bg-white overflow-hidden perspective-[2000px]">
+    <section
+      ref={sectionRef}
+      className="py-32 bg-white overflow-hidden perspective-[2000px]"
+    >
       <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-5xl lg:text-7xl font-extrabold text-primary-black mb-12 tracking-tight">
           Creator marketing starts <br className="hidden md:block" /> with

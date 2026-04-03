@@ -216,7 +216,7 @@ export default function Home() {
             className="w-full h-full object-cover"
           >
             <source
-              src="/UGC_Creator_Website_Background_Video.mp4"
+              src="https://ik.imagekit.io/xmlyox01a/UGC_Creator_Website_Background_Video.mp4"
               type="video/mp4"
             />
             Your browser does not support the video tag.
