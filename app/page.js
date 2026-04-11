@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import AnimateOnScroll from "./components/AnimateOnScroll";
 import SignUpButton from "./components/SignUpButton";
 import UGCShowcase from "./components/UGCShowcase";
+import FeaturesCarousel from "./components/FeaturesCarousel";
 
 /* ─── Trusted Logos (inline SVG-style blocks) ─── */
 const TRUST_LOGOS = [
@@ -241,19 +242,19 @@ export default function Home() {
           </div>
 
           {/* H1 - Enhanced styles for maximum visibility */}
-          <h2 className="sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-4 animate-fade-in-up text-shadow-strong">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-4 animate-fade-in-up text-shadow-strong">
             Get High-Converting
           </h2>
-          <h1 className="gradient-text sm:text-4xl md:text-5xl lg:text-6xl xl:text-9xl font-extrabold leading-[0.9] tracking-tighter mb-4 animate-fade-in-up scale-110 md:scale-100 flex justify-center">
+          <h1 className="gradient-text text-5xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold leading-[0.9] tracking-tighter mb-4 animate-fade-in-up scale-110 md:scale-100 flex justify-center">
             UGC Videos
           </h1>
-          <h2 className="sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-10 animate-fade-in-up text-shadow-strong">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-10 animate-fade-in-up text-shadow-strong">
             for Your Brand in 7 Days
           </h2>
 
           {/* Sub copy - Changed to white/80 */}
           <p
-            className="max-w-2xl mx-auto text-lg md:text-xl text-white/80 leading-relaxed mb-10 animate-fade-in-up delay-200"
+            className="max-w-2xl mx-auto text-xl md:text-2xl text-white/80 leading-relaxed mb-10 animate-fade-in-up delay-200"
             style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
           >
             Spacebar connects you with India’s best creators to produce
@@ -271,14 +272,14 @@ export default function Home() {
           >
             <SignUpButton
               id="hero-cta-primary"
-              className="h-[52px] px-8 flex items-center gap-2 text-base font-medium text-white bg-accent-blue rounded-xl hover:bg-accent-blue-hover shadow-xl shadow-accent-blue/25 hover:shadow-accent-blue/40 transition-all duration-300 hover:-translate-y-[2px]"
+              className="h-[56px] px-10 flex items-center gap-2 text-lg font-medium text-white bg-accent-blue rounded-xl hover:bg-accent-blue-hover shadow-xl shadow-accent-blue/25 hover:shadow-accent-blue/40 transition-all duration-300 hover:-translate-y-[2px]"
             >
               Sign up for free
             </SignUpButton>
             <a
               href="#features"
               id="hero-cta-secondary"
-              className="h-[52px] px-8 flex items-center gap-2 text-base font-medium text-white bg-white/10 border border-white/20 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300"
+              className="h-[56px] px-10 flex items-center gap-2 text-lg font-medium text-white bg-white/10 border border-white/20 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300"
             >
               See How It Works
               <svg
@@ -340,25 +341,7 @@ export default function Home() {
             </p>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {FEATURES.map((f, i) => (
-              <AnimateOnScroll key={f.title} delay={`delay-${(i + 1) * 100}`}>
-                <div className="group relative p-8 md:p-10 rounded-3xl bg-light-gray border border-transparent hover:border-accent-blue/20 hover:shadow-xl hover:shadow-accent-blue/5 transition-all duration-500 cursor-default">
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-2xl bg-accent-blue/10 text-accent-blue flex items-center justify-center mb-6 group-hover:bg-accent-blue group-hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-accent-blue/25">
-                      {f.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-primary-black mb-3">
-                      {f.title}
-                    </h3>
-                    <p className="text-text-gray leading-relaxed">{f.desc}</p>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
+          <FeaturesCarousel features={FEATURES} />
         </div>
       </section>
 
