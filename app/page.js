@@ -3,7 +3,6 @@ import Navbar from "./components/Navbar";
 import AnimateOnScroll from "./components/AnimateOnScroll";
 import SignUpButton from "./components/SignUpButton";
 import UGCShowcase from "./components/UGCShowcase";
-import FeaturesCarousel from "./components/FeaturesCarousel";
 
 /* ─── Trusted Logos (inline SVG-style blocks) ─── */
 const TRUST_LOGOS = [
@@ -341,7 +340,25 @@ export default function Home() {
             </p>
           </AnimateOnScroll>
 
-          <FeaturesCarousel features={FEATURES} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {FEATURES.map((f, i) => (
+              <AnimateOnScroll key={f.title} delay={`delay-${(i + 1) * 100}`}>
+                <div className="group relative p-8 md:p-10 rounded-3xl bg-light-gray border border-transparent hover:border-accent-blue/20 hover:shadow-xl hover:shadow-accent-blue/5 transition-all duration-500 cursor-default">
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10">
+                    <div className="w-14 h-14 rounded-2xl bg-accent-blue/10 text-accent-blue flex items-center justify-center mb-6 group-hover:bg-accent-blue group-hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-accent-blue/25">
+                      {f.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-primary-black mb-3">
+                      {f.title}
+                    </h3>
+                    <p className="text-text-gray leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              </AnimateOnScroll>
+            ))}
+          </div>
         </div>
       </section>
 
