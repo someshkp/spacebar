@@ -216,7 +216,7 @@ export default function Home() {
             className="w-full h-full object-cover"
           >
             <source
-              src="https://ik.imagekit.io/xmlyox01a/UGC_Creator_Website_Background_Video.mp4"
+              src="https://ik.imagekit.io/xmlyox01a/UGC_Creator_Website_Background_Video.mp4?tr=orig-true"
               type="video/mp4"
             />
             Your browser does not support the video tag.
@@ -302,7 +302,7 @@ export default function Home() {
       <UGCShowcase />
 
       {/* ════════════════════════ TRUST BAR ════════════════════════ */}
-      <section className="py-12 border-y border-border-gray bg-light-gray/50">
+      {/* <section className="py-12 border-y border-border-gray bg-light-gray/50">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-center text-sm font-medium text-text-gray mb-8 tracking-wider uppercase">
             Connecting innovative brands with creative minds
@@ -320,7 +320,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ════════════════════════ FEATURES ════════════════════════ */}
       <section id="features" className="py-24 md:py-32">

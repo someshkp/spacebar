@@ -15,40 +15,50 @@ const CATEGORIES = [
 ];
 
 const REEL_METADATA = [
-  // {
-  //   name: "Max",
-  //   stars: 5,
-  //   country: "Canada",
-  //   video: "https://ik.imagekit.io/xmlyox01a/ugc1.mp4",
-  //   category: "tech",
-  // },
   {
-    name: "Sarah",
-    stars: 5,
-    country: "USA",
-    video: "https://ik.imagekit.io/xmlyox01a/ugc2.mp4",
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-1.mp4",
+    category: "tech",
+  },
+  {
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-2.mp4",
     category: "cosmetics",
   },
   {
-    name: "Elena",
-    stars: 5,
-    country: "UK",
-    video: "https://ik.imagekit.io/xmlyox01a/ugc3.mp4",
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-3.mp4",
     category: "apparel",
   },
   {
-    name: "Arjun",
-    stars: 5,
     country: "India",
-    video: "https://ik.imagekit.io/xmlyox01a/ugc4.mp4",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-4.mp4",
     category: "health",
   },
   {
-    name: "Sofia",
-    stars: 5,
-    country: "Spain",
-    video: "https://ik.imagekit.io/xmlyox01a/ugc5.mp4",
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-5.mp4",
     category: "food",
+  },
+  {
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-6.mp4",
+    category: "apparel",
+  },
+  {
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-7.mp4",
+    category: "apparel",
+  },
+  {
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-8.mp4",
+    category: "apparel",
+  },
+  {
+    country: "India",
+    video: "https://ik.imagekit.io/xmlyox01a/ugc-9.mp4",
+    category: "apparel",
   },
 ];
 
@@ -214,18 +224,30 @@ export default function UGCShowcase() {
                     backfaceVisibility: "hidden",
                   }}
                 >
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                  >
-                    <source src={reel.video} type="video/mp4" />
-                  </video>
+                  {isActive ? (
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                      poster={`${reel.video}/ik-thumbnail.jpg?tr=so-1,w-400`}
+                    >
+                      <source
+                        src={`${reel.video}?tr=orig-true`}
+                        type="video/mp4"
+                      />
+                    </video>
+                  ) : (
+                    <img
+                      src={`${reel.video}/ik-thumbnail.jpg?tr=so-1,w-400`}
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover pointer-events-none grayscale opacity-60"
+                    />
+                  )}
 
                   {/* Rating/Name Overlay */}
-                  <div
+                  {/* <div
                     className={`absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-black via-black/40 to-transparent text-left transition-all duration-700 ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
                   >
                     <div className="flex gap-1 mb-2">
@@ -247,7 +269,7 @@ export default function UGCShowcase() {
                     <p className="text-white/60 text-sm font-medium uppercase tracking-widest">
                       {reel.category}
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               );
             })}
