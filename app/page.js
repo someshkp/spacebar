@@ -241,19 +241,19 @@ export default function Home() {
           </div>
 
           {/* H1 - Enhanced styles for maximum visibility */}
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-4 animate-fade-in-up text-shadow-strong">
-            Get High-Converting
+          <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white mb-4 animate-fade-in-up text-shadow-strong">
+            Performance-first
           </h2>
-          <h1 className="gradient-text text-5xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold leading-[0.9] tracking-tighter mb-4 animate-fade-in-up scale-110 md:scale-100 flex justify-center">
-            UGC Videos
+          <h1 className="gradient-text text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-[0.9] tracking-tighter mb-4 animate-fade-in-up scale-110 md:scale-100 flex justify-center">
+            UGC Marketplace
           </h1>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-[1.08] tracking-tight text-white mb-10 animate-fade-in-up text-shadow-strong">
-            for Your Brand in 7 Days
+          <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white mb-10 animate-fade-in-up text-shadow-strong">
+            for Indian Brands
           </h2>
 
           {/* Sub copy - Changed to white/80 */}
           <p
-            className="max-w-2xl mx-auto text-xl md:text-2xl text-white/80 leading-relaxed mb-10 animate-fade-in-up delay-200"
+            className="max-w-2xl mx-auto text-xl md:text-xl text-white/80 leading-relaxed mb-10 animate-fade-in-up delay-200"
             style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
           >
             Spacebar connects you with India’s best creators to produce
