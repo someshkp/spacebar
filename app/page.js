@@ -252,7 +252,7 @@ export default function Home() {
 
           {/* Sub copy */}
           <p
-            className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-white/70 leading-relaxed mb-8 animate-fade-in-up delay-200"
+            className="max-w-4xl mx-auto text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 animate-fade-in-up delay-200 md:whitespace-nowrap"
             style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
           >
             India’s best creators to produce scroll stopping UGC content for ads and social media
