@@ -18,13 +18,14 @@ export default function Navbar() {
   const isFormPage =
     pathname.startsWith("/onboarding") || pathname === "/contact";
 
+  const isHome = pathname === "/";
+
   const navLinks = isFormPage
     ? []
     : [
-        { label: "Features", href: "#features" },
-        { label: "How It Works", href: "#how-it-works" },
-        // { label: "Testimonials", href: "#testimonials" },
-        // { label: "Pricing", href: "#pricing" },
+        { label: "Features", href: isHome ? "#features" : "/#features" },
+        { label: "How It Works", href: isHome ? "#how-it-works" : "/#how-it-works" },
+        { label: "Creators", href: "/creators" },
       ];
 
   return (

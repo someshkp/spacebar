@@ -240,24 +240,22 @@ export default function Home() {
             The ultimate collaboration hub
           </div>
 
-          {/* H1 - Enhanced styles for maximum visibility */}
-          <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white mb-4 animate-fade-in-up text-shadow-strong">
-            Performance-first
-          </h2>
-          <h1 className="gradient-text text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-7xl font-extrabold leading-[0.9] tracking-tighter mb-4 animate-fade-in-up scale-110 md:scale-100 flex justify-center">
-            UGC Marketplace
-          </h1>
-          <h2 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.08] tracking-tight text-white mb-10 animate-fade-in-up text-shadow-strong">
-            for Indian Brands
-          </h2>
+          {/* H1 - Balanced Typography & Hierarchy */}
+          <div className="max-w-4xl mx-auto text-center mb-6 animate-fade-in-up">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight mb-4 text-shadow-strong">
+              A <span className="gradient-text">Video Creator Marketplace</span>
+            </h1>
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight text-white/90 max-w-3xl mx-auto leading-snug">
+              that connects businesses with creators to produce performance-oriented video content at scale.
+            </h2>
+          </div>
 
-          {/* Sub copy - Changed to white/80 */}
+          {/* Sub copy */}
           <p
-            className="max-w-2xl mx-auto text-xl md:text-xl text-white/80 leading-relaxed mb-10 animate-fade-in-up delay-200"
+            className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-white/70 leading-relaxed mb-8 animate-fade-in-up delay-200"
             style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
           >
-            Spacebar connects you with India’s best creators to produce
-            scroll-stopping content for ads & social media.
+            India’s best creators to produce scroll stopping UGC content for ads and social media
           </p>
 
           {/* CTA Buttons */}

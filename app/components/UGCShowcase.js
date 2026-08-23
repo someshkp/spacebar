@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useMemo } from "react";
+import { useRef, useState, useMemo, useEffect } from "react";
 import InnerCircle from "./InnerCircle";
 
 const CATEGORIES = [
@@ -190,18 +190,38 @@ const CREATORS_WITH_VIDEO = [
 function VideoCard({ reel, onClick }) {
   const videoRef = useRef(null);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [reel.videos]);
+
   const handleMouseEnter = () => {
     if (videoRef.current) {
       videoRef.current
         .play()
         .catch((err) => console.log("Video play error:", err));
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
     }
   };
 
@@ -212,17 +232,17 @@ function VideoCard({ reel, onClick }) {
     >
       {/* Video Container */}
       <div
-        className="relative w-full h-[380px] md:h-[440px] rounded-[2rem] overflow-hidden bg-gray-50"
+        className="relative w-full h-[380px] md:h-[440px] rounded-[2rem] overflow-hidden bg-neutral-900"
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
         <video
           ref={videoRef}
+          autoPlay
           muted
           playsInline
           loop
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover"
-          poster={`${reel.videos[0]}?tr=so-1,w-400`}
         >
           <source src={`${reel.videos[0]}?tr=orig-true`} type="video/mp4" />
         </video>
@@ -431,6 +451,25 @@ export default function UGCShowcase() {
               <VideoCard reel={creator} onClick={() => setActiveCreator(creator)} />
             </div>
           ))}
+        </div>
+
+        {/* View All Creators CTA */}
+        <div className="mt-8 flex justify-center">
+          <a
+            href="/creators"
+            className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-primary-black text-white text-base font-semibold border border-white/20 hover:bg-neutral-800 hover:scale-105 shadow-xl transition-all duration-300 group"
+          >
+            <span>Explore All Creators & Full Video Portfolios</span>
+            <svg
+              className="w-5 h-5 text-accent-blue group-hover:translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
         </div>
 
         {/* Creator Video Modal */}
