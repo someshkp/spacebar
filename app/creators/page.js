@@ -31,7 +31,7 @@ function InlineVideoPreview({ videoUrl, title, onClick }) {
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     observer.observe(video);
@@ -103,8 +103,19 @@ function CreatorVideoModal({ creator, activeVideoIndex, onClose }) {
           onClick={onClose}
           className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-white/10 border border-white/20 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-300 hover:rotate-90 cursor-pointer"
         >
-          <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
 
@@ -134,10 +145,19 @@ function CreatorVideoModal({ creator, activeVideoIndex, onClose }) {
               </div>
               <div className="min-w-0 flex-grow">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-xl text-white truncate">{creator.name}</h3>
-                  <span className="text-accent-blue text-sm" title="Verified Creator">✓</span>
+                  <h3 className="font-extrabold text-xl text-white truncate">
+                    {creator.name}
+                  </h3>
+                  <span
+                    className="text-accent-blue text-sm"
+                    title="Verified Creator"
+                  >
+                    ✓
+                  </span>
                 </div>
-                <p className="text-sm text-white/50 font-medium truncate">{creator.handle}</p>
+                <p className="text-sm text-white/50 font-medium truncate">
+                  {creator.handle}
+                </p>
               </div>
             </div>
 
@@ -153,7 +173,8 @@ function CreatorVideoModal({ creator, activeVideoIndex, onClose }) {
 
             {/* Niche */}
             <p className="text-sm text-white/70 leading-relaxed mb-6">
-              <span className="font-semibold text-white/95">Niche:</span> {creator.niche}
+              <span className="font-semibold text-white/95">Niche:</span>{" "}
+              {creator.niche}
             </p>
 
             {/* Video List */}
@@ -175,13 +196,20 @@ function CreatorVideoModal({ creator, activeVideoIndex, onClose }) {
                       }`}
                     >
                       <div className="w-12 h-16 rounded-xl bg-black overflow-hidden flex-shrink-0 relative border border-white/10">
-                        <video src={`${vidUrl}?tr=orig-true`} className="w-full h-full object-cover" muted playsInline />
+                        <video
+                          src={`${vidUrl}?tr=orig-true`}
+                          className="w-full h-full object-cover"
+                          muted
+                          playsInline
+                        />
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                           <span className="text-white text-xs">▶</span>
                         </div>
                       </div>
                       <div className="min-w-0 flex-grow">
-                        <p className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-white/80"}`}>
+                        <p
+                          className={`text-sm font-semibold truncate ${isActive ? "text-white" : "text-white/80"}`}
+                        >
                           Video #{idx + 1}
                         </p>
                         <p className="text-[11px] text-white/40 truncate">
@@ -263,7 +291,9 @@ export default function CreatorsPage() {
           </h1>
 
           <p className="text-base sm:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed mb-8">
-            Connect directly with India’s top performance-oriented UGC creators. Browse their complete video portfolios and start high-converting campaigns.
+            Connect directly with India’s top performance-oriented UGC creators.
+            Browse their complete video portfolios and start high-converting
+            campaigns.
           </p>
 
           {/* Search Bar */}
@@ -283,7 +313,11 @@ export default function CreatorsPage() {
               viewBox="0 0 24 24"
             >
               <circle cx="11" cy="11" r="8" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-4.35-4.35"
+              />
             </svg>
             {searchQuery && (
               <button
@@ -321,7 +355,9 @@ export default function CreatorsPage() {
         <div className="space-y-12 mt-12">
           {filteredCreators.length === 0 ? (
             <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
-              <p className="text-xl text-white/60 font-medium">No creators found matching "{searchQuery}"</p>
+              <p className="text-xl text-white/60 font-medium">
+                No creators found matching "{searchQuery}"
+              </p>
               <button
                 onClick={() => {
                   setSearchQuery("");
@@ -356,7 +392,10 @@ export default function CreatorsPage() {
                         <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                           {creator.name}
                         </h2>
-                        <span className="w-5 h-5 rounded-full bg-accent-blue/20 text-accent-blue flex items-center justify-center text-xs font-bold" title="Verified Creator">
+                        <span
+                          className="w-5 h-5 rounded-full bg-accent-blue/20 text-accent-blue flex items-center justify-center text-xs font-bold"
+                          title="Verified Creator"
+                        >
                           ✓
                         </span>
                       </div>
@@ -367,12 +406,23 @@ export default function CreatorsPage() {
                         className="text-sm text-white/50 hover:text-pink-400 font-medium transition-colors inline-flex items-center gap-1 mt-0.5"
                       >
                         {creator.handle}
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        <svg
+                          className="w-3 h-3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
                         </svg>
                       </a>
                       <p className="text-xs sm:text-sm text-white/70 mt-1">
-                        <span className="text-white/40">Niche:</span> {creator.niche}
+                        <span className="text-white/40">Niche:</span>{" "}
+                        {creator.niche}
                       </p>
                     </div>
                   </div>
@@ -442,7 +492,9 @@ export default function CreatorsPage() {
       <footer className="border-t border-white/10 bg-primary-black/80 py-10 px-6 text-center text-white/40 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-white font-bold text-base">Space<span className="text-accent-blue">bar</span></span>
+            <span className="text-white font-bold text-base">
+              Space<span className="text-accent-blue">bar</span>
+            </span>
             <span>— The Video Creator Marketplace</span>
           </div>
           <p>© 2026 Spacebar. All rights reserved.</p>

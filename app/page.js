@@ -246,7 +246,8 @@ export default function Home() {
               A <span className="gradient-text">Video Creator Marketplace</span>
             </h1>
             <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-tight text-white/90 max-w-3xl mx-auto leading-snug">
-              that connects businesses with creators to produce performance-oriented video content at scale.
+              that connects businesses with creators to produce
+              performance-oriented video content at scale.
             </h2>
           </div>
 
@@ -255,7 +256,8 @@ export default function Home() {
             className="max-w-4xl mx-auto text-sm sm:text-base md:text-lg text-white/75 leading-relaxed mb-8 animate-fade-in-up delay-200 md:whitespace-nowrap"
             style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
           >
-            India’s best creators to produce scroll stopping UGC content for ads and social media
+            India’s best creators to produce scroll stopping UGC content for ads
+            and social media
           </p>
 
           {/* CTA Buttons */}

@@ -3,43 +3,134 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 
+const WEB3FORMS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_KEY ||
+  "352acfce-7d4d-41ba-b6c9-12a1cf0f4c63";
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    marketingHeadName: "",
     company: "",
-    subject: "Book a Demo",
+    email: "",
+    mobile: "",
+    whatsapp: "",
+    contact: "",
+    instagramLink: "",
     message: "",
   });
+
+  const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const isValidEmail = (val) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val?.trim() || "");
+
+  const isValidPhone = (val) => {
+    if (!val) return false;
+    const digits = val.replace(/\D/g, "");
+    return digits.length >= 10 && digits.length <= 15;
+  };
+
+  const errors = {
+    marketingHeadName: !formData.marketingHeadName.trim()
+      ? "Marketing Head Name is required"
+      : "",
+    company: !formData.company.trim() ? "Company name is required" : "",
+    email: !formData.email.trim()
+      ? "Email address is required"
+      : !isValidEmail(formData.email)
+        ? "Please enter a valid email address"
+        : "",
+    mobile: !formData.mobile.trim()
+      ? "Mobile number is required"
+      : !isValidPhone(formData.mobile)
+        ? "Please enter a valid 10-15 digit mobile number"
+        : "",
+    whatsapp: !formData.whatsapp.trim()
+      ? "WhatsApp number is required"
+      : !isValidPhone(formData.whatsapp)
+        ? "Please enter a valid 10-15 digit WhatsApp number"
+        : "",
+    instagramLink: !formData.instagramLink.trim()
+      ? "Instagram profile link or handle is required"
+      : "",
+  };
+
+  const isFormValid =
+    !errors.marketingHeadName &&
+    !errors.company &&
+    !errors.email &&
+    !errors.mobile &&
+    !errors.whatsapp &&
+    !errors.instagramLink;
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const copyMobileToWhatsApp = () => {
+    setFormData((prev) => ({ ...prev, whatsapp: prev.mobile }));
+    setTouched((prev) => ({ ...prev, whatsapp: true }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setTouched({
+      marketingHeadName: true,
+      company: true,
+      email: true,
+      mobile: true,
+      whatsapp: true,
+      contact: true,
+      instagramLink: true,
+    });
+
+    if (!isFormValid) {
+      setError("Please fill in all required fields correctly.");
+      return;
+    }
+
     setIsSubmitting(true);
     setError("");
 
     try {
-      const form = e.target;
-      const formData = new FormData(form);
-      
-      // Ensure the access key is included (using your verified key from .env)
-      formData.append("access_key", "352acfce-7d4d-41ba-b6c9-12a1cf0f4c63");
-      formData.append("subject", `New Demo Booking: ${formData.get("company")}`);
-      formData.append("from_name", formData.get("name"));
+      const payload = {
+        access_key: WEB3FORMS_KEY,
+        subject: `New Demo Booking: ${formData.company} (${formData.marketingHeadName})`,
+        from_name: formData.marketingHeadName,
+        email: formData.email,
+        message: `
+New Demo Booking Request Details:
+----------------------------------
+- Marketing Head Name: ${formData.marketingHeadName}
+- Company / Brand: ${formData.company}
+- Work Email: ${formData.email}
+- Primary Mobile: ${formData.mobile}
+- WhatsApp Number: ${formData.whatsapp}
+- Secondary / Office Contact: ${formData.contact || "Not provided"}
+- Instagram Link / Handle: ${formData.instagramLink}
+- Additional Message / Requirements:
+${formData.message || "No specific message provided."}
+        `.trim(),
+      };
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         setSubmitted(true);
       } else {
-        setError(result.message || "Submission failed. Please check your API key.");
+        setError(result.message || "Submission failed. Please try again.");
       }
     } catch (err) {
       console.error("Submission Error:", err);
@@ -58,22 +149,23 @@ export default function ContactPage() {
       <Navbar />
 
       <main className="pt-32 px-6 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5">
               Book a <span className="gradient-text">Live Demo</span>
             </h1>
-            <p className="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
-              Experience how Spacebar can scale your content game. Our team will
-              show you exactly how we find & manage the top 1% of creators.
+            <p className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed font-medium">
+              Experience how Spacebar scales your creator marketing and UGC
+              campaigns. Our team will show you how we connect you with the
+              creators.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             {/* Left: Info */}
-            <div className="lg:col-span-2 space-y-10">
+            <div className="lg:col-span-4 space-y-8">
               <div
-                className="animate-fade-in"
+                className="bg-white/[0.03] backdrop-blur-xl rounded-[32px] p-8 border border-white/10 shadow-xl animate-fade-in"
                 style={{ animationDelay: "100ms" }}
               >
                 <h3 className="text-xs font-bold text-accent-blue uppercase tracking-widest mb-4">
@@ -81,14 +173,14 @@ export default function ContactPage() {
                 </h3>
                 <ul className="space-y-4">
                   {[
-                    "Personalized platform walkthrough",
-                    "Creator matching strategy for your niche",
-                    "Custom pricing based on your volume",
-                    "Early access to new platform features",
+                    "1-on-1 strategy & platform walkthrough",
+                    "Curated creator matching for your niche",
+                    "Custom volume-based pricing plans",
+                    "Instant onboarding & campaign kick-off",
                   ].map((item, i) => (
                     <li
                       key={i}
-                      className="flex gap-3 text-white/80 font-medium"
+                      className="flex gap-3 text-white/80 text-sm font-medium leading-snug"
                     >
                       <div className="w-5 h-5 rounded-full bg-accent-blue/20 flex items-center justify-center text-accent-blue flex-shrink-0 mt-0.5">
                         <svg
@@ -107,87 +199,248 @@ export default function ContactPage() {
                   ))}
                 </ul>
               </div>
-
-              <div
-                className="pt-10 border-t border-white/10 animate-fade-in"
-                style={{ animationDelay: "300ms" }}
-              >
-                <p className="text-sm font-bold text-white uppercase tracking-wider mb-6">
-                  Trusted by
-                </p>
-                <div className="flex flex-wrap gap-8 opacity-40">
-                  <span className="font-bold text-xl">Stripe</span>
-                  <span className="font-bold text-xl">Linear</span>
-                  <span className="font-bold text-xl">Notion</span>
-                </div>
-              </div>
             </div>
 
             {/* Right: Form */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-8">
               {!submitted ? (
-                <div className="bg-white/[0.03] backdrop-blur-xl rounded-[40px] p-8 md:p-12 border border-white/10 shadow-2xl animate-scale-in">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="bg-white/[0.03] backdrop-blur-xl rounded-[40px] p-6 sm:p-10 md:p-12 border border-white/10 shadow-2xl animate-scale-in">
+                  <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+                    <div>
+                      <h2 className="text-2xl font-bold text-white tracking-tight">
+                        Schedule Your Session
+                      </h2>
+                      <p className="text-xs sm:text-sm text-white/50 mt-1">
+                        Fill in your details and we'll reach out within 2 hours.
+                      </p>
+                    </div>
+                    <span className="text-[11px] font-semibold text-accent-blue uppercase tracking-wider bg-accent-blue/10 px-3 py-1 rounded-full border border-accent-blue/20">
+                      * Required
+                    </span>
+                  </div>
+
+                  <form
+                    onSubmit={handleSubmit}
+                    className="space-y-6"
+                    noValidate
+                  >
+                    {/* Row 1: Marketing Head Name & Company */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
                         <label className="block text-sm font-bold text-white/80 mb-2 px-1">
-                          Name
+                          Marketing Head Name{" "}
+                          <span className="text-accent-blue">*</span>
                         </label>
                         <input
-                          required
-                          name="name"
                           type="text"
-                          placeholder="Your Name"
-                          className="w-full h-14 px-5 bg-white/5 rounded-2xl border border-white/10 focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20"
-                          value={formData.name}
+                          placeholder="e.g. Sarah Jenkins"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.marketingHeadName &&
+                            errors.marketingHeadName
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
+                          value={formData.marketingHeadName}
+                          onBlur={() => handleBlur("marketingHeadName")}
                           onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
+                            setFormData({
+                              ...formData,
+                              marketingHeadName: e.target.value,
+                            })
                           }
                         />
+                        {touched.marketingHeadName &&
+                          errors.marketingHeadName && (
+                            <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                              <span>⚠</span> {errors.marketingHeadName}
+                            </p>
+                          )}
                       </div>
+
                       <div>
                         <label className="block text-sm font-bold text-white/80 mb-2 px-1">
-                          Work Email
+                          Company / Brand Name{" "}
+                          <span className="text-accent-blue">*</span>
                         </label>
                         <input
-                          required
-                          name="email"
+                          type="text"
+                          placeholder="e.g. Spacebar Beauty"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.company && errors.company
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
+                          value={formData.company}
+                          onBlur={() => handleBlur("company")}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              company: e.target.value,
+                            })
+                          }
+                        />
+                        {touched.company && errors.company && (
+                          <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                            <span>⚠</span> {errors.company}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Row 2: Work Email & Instagram Link */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-sm font-bold text-white/80 mb-2 px-1">
+                          Work Email <span className="text-accent-blue">*</span>
+                        </label>
+                        <input
                           type="email"
-                          placeholder="you@company.com"
-                          className="w-full h-14 px-5 bg-white/5 rounded-2xl border border-white/10 focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20"
+                          placeholder="sarah@company.com"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.email && errors.email
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
                           value={formData.email}
+                          onBlur={() => handleBlur("email")}
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
                           }
                         />
+                        {touched.email && errors.email && (
+                          <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                            <span>⚠</span> {errors.email}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-bold text-white/80 mb-2 px-1">
+                          Instagram Profile Link / Handle{" "}
+                          <span className="text-accent-blue">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="https://instagram.com/brand or @brand"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.instagramLink && errors.instagramLink
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
+                          value={formData.instagramLink}
+                          onBlur={() => handleBlur("instagramLink")}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              instagramLink: e.target.value,
+                            })
+                          }
+                        />
+                        {touched.instagramLink && errors.instagramLink && (
+                          <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                            <span>⚠</span> {errors.instagramLink}
+                          </p>
+                        )}
                       </div>
                     </div>
 
+                    {/* Row 3: Mobile Number & WhatsApp */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="block text-sm font-bold text-white/80 mb-2 px-1">
+                          Mobile Number{" "}
+                          <span className="text-accent-blue">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          placeholder="e.g. +91 98765 43210"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.mobile && errors.mobile
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
+                          value={formData.mobile}
+                          onBlur={() => handleBlur("mobile")}
+                          onChange={(e) =>
+                            setFormData({ ...formData, mobile: e.target.value })
+                          }
+                        />
+                        {touched.mobile && errors.mobile && (
+                          <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                            <span>⚠</span> {errors.mobile}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-2 px-1">
+                          <label className="text-sm font-bold text-white/80">
+                            WhatsApp Number{" "}
+                            <span className="text-accent-blue">*</span>
+                          </label>
+                          {formData.mobile && (
+                            <button
+                              type="button"
+                              onClick={copyMobileToWhatsApp}
+                              className="text-[11px] font-bold text-accent-blue hover:text-white transition-colors"
+                            >
+                              Same as mobile
+                            </button>
+                          )}
+                        </div>
+                        <input
+                          type="tel"
+                          placeholder="e.g. +91 98765 43210"
+                          className={`w-full h-14 px-5 bg-white/5 rounded-2xl border transition-all text-white font-medium placeholder:text-white/20 focus:outline-none ${
+                            touched.whatsapp && errors.whatsapp
+                              ? "border-red-500/80 bg-red-500/5 focus:ring-2 focus:ring-red-500/40"
+                              : "border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40"
+                          }`}
+                          value={formData.whatsapp}
+                          onBlur={() => handleBlur("whatsapp")}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              whatsapp: e.target.value,
+                            })
+                          }
+                        />
+                        {touched.whatsapp && errors.whatsapp && (
+                          <p className="text-red-400 text-xs font-semibold mt-1.5 px-1 flex items-center gap-1">
+                            <span>⚠</span> {errors.whatsapp}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Row 4: Secondary Contact */}
                     <div>
                       <label className="block text-sm font-bold text-white/80 mb-2 px-1">
-                        Company Name
+                        Alternative Contact / Desk Phone{" "}
+                        <span className="text-white/40 text-xs font-normal">
+                          (Optional)
+                        </span>
                       </label>
                       <input
-                        required
-                        name="company"
-                        type="text"
-                        placeholder="e.g. Acme Corp"
-                        className="w-full h-14 px-5 bg-white/5 rounded-2xl border border-white/10 focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20"
-                        value={formData.company}
+                        type="tel"
+                        placeholder="e.g. +91 98765 43210 or 022 2847 0000"
+                        className="w-full h-14 px-5 bg-white/5 rounded-2xl border border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20 focus:outline-none"
+                        value={formData.contact}
                         onChange={(e) =>
-                          setFormData({ ...formData, company: e.target.value })
+                          setFormData({ ...formData, contact: e.target.value })
                         }
                       />
                     </div>
 
+                    {/* Row 5: Message / Requirements */}
                     <div>
                       <label className="block text-sm font-bold text-white/80 mb-2 px-1">
-                        How can we help?
+                        How can we help? / Campaign Goals
                       </label>
                       <textarea
-                        name="message"
-                        placeholder="Tell us about your brand goals..."
-                        className="w-full h-32 p-5 bg-white/5 rounded-2xl border border-white/10 focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20 resize-none"
+                        rows={3}
+                        placeholder="Tell us about your creator requirements, monthly video goals, or specific niches..."
+                        className="w-full h-28 p-5 bg-white/5 rounded-2xl border border-white/10 focus:border-accent-blue focus:ring-2 focus:ring-accent-blue/40 text-white font-medium transition-all placeholder:text-white/20 resize-none focus:outline-none"
                         value={formData.message}
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
@@ -196,15 +449,19 @@ export default function ContactPage() {
                     </div>
 
                     {error && (
-                      <p className="text-red-400 text-sm font-bold">{error}</p>
+                      <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm font-semibold flex items-center gap-2">
+                        <span>⚠</span> {error}
+                      </div>
                     )}
 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full h-16 rounded-2xl bg-accent-blue hover:bg-accent-blue-hover text-white font-bold text-lg shadow-xl shadow-accent-blue/25 hover:shadow-accent-blue/40 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full h-16 rounded-2xl bg-accent-blue hover:bg-accent-blue-hover text-white font-bold text-lg shadow-xl shadow-accent-blue/25 hover:shadow-accent-blue/40 transition-all active:scale-[0.99] flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? "Processing..." : "Confirm Booking"}
+                      {isSubmitting
+                        ? "Processing..."
+                        : "Confirm Live Demo Booking"}
                       {!isSubmitting && (
                         <svg
                           width="20"
@@ -216,8 +473,8 @@ export default function ContactPage() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <line x1="5" y1="12" x2="19" y2="12"></line>
-                          <polyline points="12 5 19 12 12 19"></polyline>
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                          <polyline points="12 5 19 12 12 19" />
                         </svg>
                       )}
                     </button>
@@ -238,21 +495,35 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <h2 className="text-3xl font-extrabold text-white mb-4">
-                    Request Received!
+                    Demo Request Received!
                   </h2>
-                  <p className="text-lg text-white/60 mb-8 max-w-xs mx-auto">
-                    One of our content strategists will reach out within the
-                    next 2 hours to confirm your demo slot.
+                  <p className="text-lg text-white/60 mb-8 max-w-md mx-auto leading-relaxed">
+                    Thank you,{" "}
+                    <span className="text-white font-semibold">
+                      {formData.marketingHeadName}
+                    </span>
+                    . One of our content strategists will reach out via
+                    email/WhatsApp to confirm your custom demo slot.
                   </p>
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setError("");
-                      setFormData({ name: "", email: "", company: "", subject: "Book a Demo", message: "" });
+                      setFormData({
+                        marketingHeadName: "",
+                        company: "",
+                        email: "",
+                        mobile: "",
+                        whatsapp: "",
+                        contact: "",
+                        instagramLink: "",
+                        message: "",
+                      });
+                      setTouched({});
                     }}
-                    className="text-accent-blue font-bold hover:text-white transition-colors"
+                    className="px-8 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-accent-blue hover:text-white hover:bg-white/10 font-bold transition-all"
                   >
-                    New Request
+                    Submit Another Request
                   </button>
                 </div>
               )}

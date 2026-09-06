@@ -281,8 +281,11 @@ Brand Onboarding Details:
                 <div className="space-y-6">
                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {[ 
-                        "$1,000 - $3,000", "$3,000 - $10,000", 
-                        "$10,000 - $25,000", "$25,000+" 
+                        "Rs 24,000 - 50,000", 
+                        "Rs 51,000 - 1,00,000", 
+                        "Rs 1,01,000 - 3,00,000", 
+                        "Rs 3,01,000 - 5,00,000",
+                        "Rs 5,00,000+"
                       ].map((range) => (
                         <button
                           key={range}

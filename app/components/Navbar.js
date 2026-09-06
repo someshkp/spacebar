@@ -31,13 +31,15 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-[1100] transition-all duration-300 ${
-        scrolled ? "glass-card shadow-lg py-3" : "bg-transparent py-5"
+        scrolled
+          ? "bg-zinc-950/85 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/60 py-3.5"
+          : "bg-transparent border-b border-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-accent-blue flex items-center justify-center shadow-lg shadow-accent-blue/20 group-hover:shadow-accent-blue/40 transition-shadow duration-300">
+        <a href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-accent-blue flex items-center justify-center shadow-lg shadow-accent-blue/25 group-hover:shadow-accent-blue/50 transition-all duration-300 group-hover:scale-105">
             <svg
               width="18"
               height="18"
@@ -53,11 +55,7 @@ export default function Navbar() {
               <path d="M2 12l10 5 10-5" />
             </svg>
           </div>
-          <span
-            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
-              scrolled ? "text-primary-black" : "text-white"
-            }`}
-          >
+          <span className="text-xl font-bold tracking-tight text-white transition-colors duration-300">
             Space<span className="text-accent-blue">bar</span>
           </span>
         </a>
@@ -68,11 +66,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              className={`text-sm font-medium transition-colors duration-200 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-accent-blue after:transition-all after:duration-300 hover:after:w-full ${
-                scrolled
-                  ? "text-text-gray hover:text-primary-black"
-                  : "text-white/80 hover:text-white"
-              }`}
+              className="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-accent-blue after:transition-all after:duration-300 hover:after:w-full"
             >
               {link.label}
             </a>
@@ -83,11 +77,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-3">
           <a
             href="/contact"
-            className={`h-[44px] px-5 flex items-center text-sm font-medium border rounded-xl transition-all duration-200 shadow-sm ${
-              scrolled
-                ? "text-text-gray border-border-gray hover:border-accent-blue hover:text-accent-blue"
-                : "text-white border-white/20 hover:bg-white/10"
-            }`}
+            className="h-[44px] px-5 flex items-center text-sm font-medium text-white/90 bg-white/5 hover:bg-white/10 border border-white/15 hover:border-accent-blue/50 hover:text-white rounded-xl transition-all duration-200 shadow-sm"
           >
             Book a Demo
           </a>
@@ -97,21 +87,21 @@ export default function Navbar() {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl border border-border-gray"
+          className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 text-white"
           aria-label="Toggle menu"
         >
           <span
-            className={`block w-5 h-[2px] bg-primary-black transition-all duration-300 ${
+            className={`block w-5 h-[2px] bg-white transition-all duration-300 ${
               mobileOpen ? "rotate-45 translate-y-[5px]" : ""
             }`}
           />
           <span
-            className={`block w-5 h-[2px] bg-primary-black transition-all duration-300 ${
+            className={`block w-5 h-[2px] bg-white transition-all duration-300 ${
               mobileOpen ? "opacity-0" : ""
             }`}
           />
           <span
-            className={`block w-5 h-[2px] bg-primary-black transition-all duration-300 ${
+            className={`block w-5 h-[2px] bg-white transition-all duration-300 ${
               mobileOpen ? "-rotate-45 -translate-y-[5px]" : ""
             }`}
           />
@@ -121,37 +111,40 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          mobileOpen
+            ? "max-h-[500px] opacity-100 bg-zinc-950/95 backdrop-blur-2xl border-t border-white/10 mt-3.5"
+            : "max-h-0 opacity-0"
         }`}
       >
-        <div className="px-6 pb-6 pt-2 flex flex-col gap-3">
+        <div className="px-6 pb-6 pt-3 flex flex-col gap-3">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="text-base font-medium text-text-gray hover:text-primary-black py-2 transition-colors duration-200"
+              className="text-base font-medium text-white/80 hover:text-white py-2 transition-colors duration-200"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
             </a>
           ))}
-          <div className="flex flex-col gap-4 pt-4 border-t border-border-gray">
+          <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
             <a
               href="/contact"
-              className="h-[48px] flex items-center justify-center text-sm font-semibold text-primary-black border border-border-gray rounded-xl hover:bg-light-gray transition-colors"
+              className="h-[48px] flex items-center justify-center text-sm font-semibold text-white bg-white/5 border border-white/15 rounded-xl hover:bg-white/10 transition-colors"
+              onClick={() => setMobileOpen(false)}
             >
               Book a Demo
             </a>
             <div className="space-y-3">
-              <div className="text-xs font-semibold text-text-gray uppercase tracking-wider px-2">
+              <div className="text-xs font-semibold text-white/40 uppercase tracking-wider px-2">
                 Sign up
               </div>
               <a
                 href="/onboarding/brand"
-                className="flex items-center gap-4 p-3 rounded-2xl bg-light-gray group"
+                className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
                 onClick={() => setMobileOpen(false)}
               >
-                <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
+                <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
                   <svg
                     width="20"
                     height="20"
@@ -167,7 +160,7 @@ export default function Navbar() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-primary-black">
+                  <div className="text-sm font-bold text-white">
                     I'm a brand
                   </div>
                   <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
@@ -177,10 +170,10 @@ export default function Navbar() {
               </a>
               <a
                 href="/onboarding/creator"
-                className="flex items-center gap-4 p-3 rounded-2xl bg-light-gray group"
+                className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
                 onClick={() => setMobileOpen(false)}
               >
-                <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-accent-blue">
+                <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
                   <svg
                     width="20"
                     height="20"
@@ -196,7 +189,7 @@ export default function Navbar() {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-primary-black">
+                  <div className="text-sm font-bold text-white">
                     I'm a creator
                   </div>
                   <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
@@ -211,3 +204,4 @@ export default function Navbar() {
     </nav>
   );
 }
+
