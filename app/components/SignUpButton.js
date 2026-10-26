@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useRef, useEffect } from "react";
 
@@ -48,7 +48,7 @@ export default function SignUpButton({
         <div className={`absolute top-full ${dropdownFullWidth ? "left-0 right-0 sm:right-auto sm:w-[320px]" : "right-0 w-[280px]"} mt-3 bg-zinc-950/95 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/80 border border-white/15 overflow-hidden animate-scale-in origin-top z-[1000]`}>
           <div className="p-2 space-y-1">
             <a 
-              href="/onboarding/brand" 
+              href="/signup?type=business" 
               className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-colors duration-200 group"
               onClick={() => setDropdownOpen(false)}
             >
@@ -64,7 +64,7 @@ export default function SignUpButton({
               </div>
             </a>
             <a 
-              href="/onboarding/creator" 
+              href="/signup?type=creator" 
               className="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/10 transition-colors duration-200 group"
               onClick={() => setDropdownOpen(false)}
             >
@@ -85,3 +85,5 @@ export default function SignUpButton({
     </div>
   );
 }
+
+

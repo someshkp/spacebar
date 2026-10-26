@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
@@ -140,7 +140,7 @@ export default function Navbar() {
                 Sign up
               </div>
               <a
-                href="/onboarding/brand"
+                href="/signup?type=business"
                 className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
                 onClick={() => setMobileOpen(false)}
               >
@@ -169,7 +169,7 @@ export default function Navbar() {
                 </div>
               </a>
               <a
-                href="/onboarding/creator"
+                href="/signup?type=creator"
                 className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
                 onClick={() => setMobileOpen(false)}
               >
@@ -204,4 +204,6 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
 
