@@ -34,10 +34,19 @@ export default function CreatorOnboarding() {
 
   // Validation helpers
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email?.trim() || "");
-  const isValidPhone = (phone) => {
+  const isValidIndianMobile = (phone) => {
     if (!phone) return false;
-    const digitsOnly = phone.replace(/\D/g, "");
-    return digitsOnly.length >= 10 && digitsOnly.length <= 15;
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length === 10) {
+      return /^[6-9]\d{9}$/.test(digits);
+    }
+    if (digits.length === 11 && digits.startsWith("0")) {
+      return /^[6-9]\d{9}$/.test(digits.slice(1));
+    }
+    if (digits.length === 12 && digits.startsWith("91")) {
+      return /^[6-9]\d{9}$/.test(digits.slice(2));
+    }
+    return false;
   };
 
   const errors = {
@@ -49,13 +58,13 @@ export default function CreatorOnboarding() {
       : "",
     mobile: !formData.mobile.trim()
       ? "Mobile number is required"
-      : !isValidPhone(formData.mobile)
-      ? "Please enter a valid 10-15 digit mobile number"
+      : !isValidIndianMobile(formData.mobile)
+      ? "Enter a valid 10-digit Indian mobile number (starts with 6-9)"
       : "",
     whatsapp: !formData.whatsapp.trim()
       ? "WhatsApp number is required"
-      : !isValidPhone(formData.whatsapp)
-      ? "Please enter a valid 10-15 digit WhatsApp number"
+      : !isValidIndianMobile(formData.whatsapp)
+      ? "Enter a valid 10-digit Indian WhatsApp number (starts with 6-9)"
       : "",
     socials: formData.socials.some((s) => !s.handle.trim())
       ? "Please provide handle for all listed platforms"
