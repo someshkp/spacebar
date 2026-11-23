@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+import { api, currentUser } from "../../lib/api";
+import AccountGate from "../../components/AccountGate";
 
-export default function BrandOnboarding() {
+function BrandOnboarding() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -31,38 +32,12 @@ export default function BrandOnboarding() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      const payload = {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Brand Application: ${formData.brandName}`,
-        name: formData.brandName,
-        message: `
-Brand Onboarding Details:
-- Brand Name: ${formData.brandName}
-- Website: ${formData.website}
-- Category: ${formData.category}
-- Product: ${formData.productName}
-- Product Details: ${formData.productDetails}
-- Goal: ${formData.goal}
-- Monthly Budget: ${formData.budget}
-        `.trim(),
-      };
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-      console.log("Web3Forms response:", result);
-
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        alert(result.message || "Submission failed. Please try again.");
-      }
+      const user = await currentUser();
+      await api('/me', { method: 'PATCH', body: { name: formData.brandName, profile: { ...user.profile, ...formData } } });
+      setSubmitted(true);
     } catch (err) {
       console.error("Error:", err);
-      alert("Network error. Please try again.");
+      alert(err.message || "Please try again.");
     }
     setIsSubmitting(false);
   };
@@ -332,3 +307,5 @@ Brand Onboarding Details:
     </div>
   );
 }
+
+export default function Page() { return <AccountGate role="business"><BrandOnboarding /></AccountGate>; }

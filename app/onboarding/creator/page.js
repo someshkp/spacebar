@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Navbar from "../../components/Navbar";
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+import { api, currentUser } from "../../lib/api";
+import AccountGate from "../../components/AccountGate";
 
-export default function CreatorOnboarding() {
+function CreatorOnboarding() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -116,45 +117,12 @@ export default function CreatorOnboarding() {
 
     setIsSubmitting(true);
     try {
-      const socialsText = formData.socials
-        .map((s) => `${s.platform}: ${s.handle}`)
-        .join(", ");
-
-      const payload = {
-        access_key: WEB3FORMS_KEY,
-        subject: `New Creator Application: ${formData.name}`,
-        from_name: formData.name,
-        email: formData.email,
-        message: `
-Creator Application Details:
------------------------------
-- Full Name: ${formData.name}
-- Email: ${formData.email}
-- Mobile Number: ${formData.mobile}
-- WhatsApp: ${formData.whatsapp}
-- Total Followers: ${formData.followers}
-- Niche: ${formData.niche}
-- Equipment Setup: ${formData.equipment}
-- Social Media Handles: ${socialsText}
-- Location: ${formData.location}
-        `.trim(),
-      };
-
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const result = await response.json();
-
-      if (result.success) {
-        setSubmitted(true);
-      } else {
-        alert(result.message || "Submission failed. Please try again.");
-      }
+      const user = await currentUser();
+      await api('/me', { method: 'PATCH', body: { name: formData.name, profile: { ...user.profile, ...formData } } });
+      setSubmitted(true);
     } catch (err) {
       console.error("Error submitting creator form:", err);
-      alert("Network error. Please try again.");
+      alert(err.message || "Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -628,3 +596,5 @@ Creator Application Details:
   );
 }
 
+
+export default function Page() { return <AccountGate role="creator"><CreatorOnboarding /></AccountGate>; }

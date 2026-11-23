@@ -1,13 +1,31 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SignUpButton from "./SignUpButton";
+import { api, clearSession, sessionDashboardPath, subscribeToSession } from "../lib/api";
 
+const serverSession = () => null;
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const profilePath = useSyncExternalStore(subscribeToSession, sessionDashboardPath, serverSession);
+  const signedIn = profilePath === null ? null : Boolean(profilePath);
   const pathname = usePathname();
+
+  async function signOut() {
+    setSigningOut(true);
+    try {
+      await api("/auth/logout", { method: "POST" });
+    } catch {
+      // Clear the local session even if the server cannot revoke it.
+    } finally {
+      clearSession();
+      window.location.replace("/account");
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -18,15 +36,8 @@ export default function Navbar() {
   const isFormPage =
     pathname.startsWith("/onboarding") || pathname === "/contact";
 
-  const isHome = pathname === "/";
-
-  const navLinks = isFormPage
-    ? []
-    : [
-        { label: "Features", href: isHome ? "#features" : "/#features" },
-        { label: "How It Works", href: isHome ? "#how-it-works" : "/#how-it-works" },
-        { label: "Creators", href: "/creators" },
-      ];
+  const navLinks = isFormPage ? [] : [{ label: "Creators", href: "/creators" }];
+  if (profilePath) navLinks.push({ label: "Profile", href: profilePath });
 
   return (
     <nav
@@ -38,7 +49,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <div className="w-9 h-9 rounded-xl bg-accent-blue flex items-center justify-center shadow-lg shadow-accent-blue/25 group-hover:shadow-accent-blue/50 transition-all duration-300 group-hover:scale-105">
             <svg
               width="18"
@@ -58,30 +69,36 @@ export default function Navbar() {
           <span className="text-xl font-bold tracking-tight text-white transition-colors duration-300">
             Space<span className="text-accent-blue">bar</span>
           </span>
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
-              className="text-sm font-medium text-white/70 hover:text-white transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-accent-blue after:transition-all after:duration-300 hover:after:w-full"
+              aria-current={pathname === link.href ? "page" : undefined}
+              className="text-sm font-medium text-white/70 hover:text-white aria-[current=page]:text-white transition-colors duration-200 relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-accent-blue after:transition-all after:duration-300 hover:after:w-full aria-[current=page]:after:w-full"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/contact"
-            className="h-[44px] px-5 flex items-center text-sm font-medium text-white/90 bg-white/5 hover:bg-white/10 border border-white/15 hover:border-accent-blue/50 hover:text-white rounded-xl transition-all duration-200 shadow-sm"
-          >
-            Book a Demo
-          </a>
-          <SignUpButton />
+          {signedIn ? (
+            <button type="button" onClick={signOut} disabled={signingOut} className="h-[44px] px-5 flex items-center text-sm font-semibold text-white border border-white/20 rounded-xl hover:bg-white/10 disabled:opacity-50">Sign out</button>
+          ) : signedIn === false && <>
+            <a href="/account" className="h-[44px] px-5 flex items-center text-sm font-semibold text-white border border-white/20 rounded-xl hover:bg-white/10 transition-colors">Login</a>
+            <a
+              href="/contact"
+              className="h-[44px] px-5 flex items-center text-sm font-medium text-white/90 bg-white/5 hover:bg-white/10 border border-white/15 hover:border-accent-blue/50 hover:text-white rounded-xl transition-all duration-200 shadow-sm"
+            >
+              Book a Demo
+            </a>
+            <SignUpButton className="h-[44px] px-5 flex items-center justify-center gap-2 text-sm font-medium text-white bg-accent-blue rounded-xl hover:bg-accent-blue-hover shadow-lg shadow-accent-blue/20 transition-colors duration-200" />
+          </>}
         </div>
 
         {/* Mobile Hamburger */}
@@ -118,86 +135,92 @@ export default function Navbar() {
       >
         <div className="px-6 pb-6 pt-3 flex flex-col gap-3">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
-              className="text-base font-medium text-white/80 hover:text-white py-2 transition-colors duration-200"
+              aria-current={pathname === link.href ? "page" : undefined}
+              className="text-base font-medium text-white/80 hover:text-white aria-[current=page]:text-accent-blue py-2 transition-colors duration-200"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
-            <a
-              href="/contact"
-              className="h-[48px] flex items-center justify-center text-sm font-semibold text-white bg-white/5 border border-white/15 rounded-xl hover:bg-white/10 transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              Book a Demo
-            </a>
-            <div className="space-y-3">
-              <div className="text-xs font-semibold text-white/40 uppercase tracking-wider px-2">
-                Sign up
+            {signedIn ? (
+              <button type="button" onClick={signOut} disabled={signingOut} className="h-[48px] flex items-center justify-center text-sm font-semibold text-white border border-white/20 rounded-xl hover:bg-white/10 disabled:opacity-50">Sign out</button>
+            ) : signedIn === false && <>
+              <a href="/account" onClick={() => setMobileOpen(false)} className="h-[48px] flex items-center justify-center text-sm font-semibold text-white border border-white/20 rounded-xl hover:bg-white/10">Login</a>
+              <a
+                href="/contact"
+                className="h-[48px] flex items-center justify-center text-sm font-semibold text-white bg-white/5 border border-white/15 rounded-xl hover:bg-white/10 transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                Book a Demo
+              </a>
+              <div className="space-y-3">
+                <div className="text-xs font-semibold text-white/40 uppercase tracking-wider px-2">
+                  Sign up
+                </div>
+                <a
+                  href="/account?mode=signup&type=business&next=%2Fonboarding%2Fbrand"
+                  className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white">
+                      I&apos;m a brand
+                    </div>
+                    <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
+                      Connect with creators
+                    </div>
+                  </div>
+                </a>
+                <a
+                  href="/account?mode=signup&type=creator&next=%2Fonboarding%2Fcreator"
+                  className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white">
+                      I&apos;m a creator
+                    </div>
+                    <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
+                      Monetize your content
+                    </div>
+                  </div>
+                </a>
               </div>
-              <a
-                href="/signup?type=business"
-                className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-                onClick={() => setMobileOpen(false)}
-              >
-                <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-white">
-                    I'm a brand
-                  </div>
-                  <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
-                    Connect with creators
-                  </div>
-                </div>
-              </a>
-              <a
-                href="/signup?type=creator"
-                className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-                onClick={() => setMobileOpen(false)}
-              >
-                <div className="w-10 h-10 rounded-xl bg-accent-blue/15 flex items-center justify-center text-accent-blue group-hover:bg-accent-blue group-hover:text-white transition-all duration-300">
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-sm font-bold text-white">
-                    I'm a creator
-                  </div>
-                  <div className="text-[12px] text-accent-blue font-medium leading-tight mt-0.5">
-                    Monetize your content
-                  </div>
-                </div>
-              </a>
-            </div>
+            </>}
           </div>
         </div>
       </div>

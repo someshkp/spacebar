@@ -16,103 +16,6 @@ const TRUST_LOGOS = [
   "Webflow",
 ];
 
-/* ─── Feature Cards Data ─── */
-const FEATURES = [
-  {
-    icon: (
-      <svg
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        viewBox="0 0 24 24"
-      >
-        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-      </svg>
-    ),
-    title: "Discover Perfect Matches",
-    desc: "Browse and connect with brands and creators that strongly align with your core values and target audience.",
-  },
-  {
-    icon: (
-      <svg
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        viewBox="0 0 24 24"
-      >
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 6v6l4 2" />
-      </svg>
-    ),
-    title: "Seamless Collaboration",
-    desc: "Chat, negotiate terms, securely share files, and finalize promotion details all from one easy-to-use central dashboard.",
-  },
-  {
-    icon: (
-      <svg
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        viewBox="0 0 24 24"
-      >
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      </svg>
-    ),
-    title: "Secure Agreements",
-    desc: "Agree on deliverables beforehand. Secure holding ensures both creators and brands are protected until the job is done.",
-  },
-  {
-    icon: (
-      <svg
-        width="24"
-        height="24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        viewBox="0 0 24 24"
-      >
-        <rect x="2" y="3" width="20" height="14" rx="2" />
-        <path d="M8 21h8M12 17v4" />
-      </svg>
-    ),
-    title: "Verified Profiles",
-    desc: "We manually verify our core network to guarantee high-quality, professional collaborations for every single promotion.",
-  },
-];
-
-/* ─── How It Works Steps ─── */
-const STEPS = [
-  {
-    step: "01",
-    title: "Create Your Profile",
-    desc: "Sign up and tell us if you're a brand looking for promotion or a creator looking to collaborate.",
-  },
-  {
-    step: "02",
-    title: "Connect & Negotiate",
-    desc: "Find the right match, send a pitch, and agree on the deliverables for the promotion.",
-  },
-  {
-    step: "03",
-    title: "Collaborate & Grow",
-    desc: "Publish the content, reach new audiences, and build lasting, mutually beneficial partnerships.",
-  },
-];
-
 /* ─── Stats ─── */
 const STATS = [
   { value: "0%", label: "Hidden Fees" },
@@ -276,24 +179,11 @@ export default function Home() {
               Sign up for free
             </SignUpButton>
             <a
-              href="#features"
+              href="/creators"
               id="hero-cta-secondary"
               className="h-[56px] px-10 flex items-center gap-2 text-lg font-medium text-white bg-white/10 border border-white/20 backdrop-blur-md rounded-xl hover:bg-white/20 transition-all duration-300"
             >
-              See How It Works
-              <svg
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <polygon points="10 8 16 12 10 16 10 8" />
-              </svg>
+              Browse Creators
             </a>
           </div>
         </div>
@@ -321,93 +211,6 @@ export default function Home() {
           </div>
         </div>
       </section> */}
-
-      {/* ════════════════════════ FEATURES ════════════════════════ */}
-      <section id="features" className="py-24 md:py-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <AnimateOnScroll className="text-center mb-16">
-            <p className="text-sm font-semibold text-accent-blue tracking-wider uppercase mb-4">
-              Creator Management
-            </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-primary-black tracking-tight mb-5">
-              Everything you need to
-              <br />
-              <span className="gradient-text">source & scale</span>
-            </h2>
-            <p className="max-w-2xl mx-auto text-lg text-text-gray leading-relaxed">
-              One platform, zero compromises. Manage top-tier creators with
-              tools built for modern growth teams.
-            </p>
-          </AnimateOnScroll>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {FEATURES.map((f, i) => (
-              <AnimateOnScroll key={f.title} delay={`delay-${(i + 1) * 100}`}>
-                <div className="group relative p-8 md:p-10 rounded-3xl bg-light-gray border border-transparent hover:border-accent-blue/20 hover:shadow-xl hover:shadow-accent-blue/5 transition-all duration-500 cursor-default">
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="relative z-10">
-                    <div className="w-14 h-14 rounded-2xl bg-accent-blue/10 text-accent-blue flex items-center justify-center mb-6 group-hover:bg-accent-blue group-hover:text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-accent-blue/25">
-                      {f.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-primary-black mb-3">
-                      {f.title}
-                    </h3>
-                    <p className="text-text-gray leading-relaxed">{f.desc}</p>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════ HOW IT WORKS ════════════════════════ */}
-      <section
-        id="how-it-works"
-        className="py-24 md:py-32 bg-primary-black text-white relative overflow-hidden"
-      >
-        {/* Background grid */}
-        <div className="absolute inset-0 opacity-10 bg-grid-pattern" />
-        {/* Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent-blue/10 blur-3xl" />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-          <AnimateOnScroll className="text-center mb-20">
-            <p className="text-sm font-semibold text-accent-blue tracking-wider uppercase mb-4">
-              How It Works
-            </p>
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
-              Three steps to
-              <br />
-              <span className="gradient-text">creator success</span>
-            </h2>
-            <p className="max-w-2xl mx-auto text-lg text-white/60 leading-relaxed">
-              Get your first campaign running in under an hour. Our guided setup
-              makes it effortless.
-            </p>
-          </AnimateOnScroll>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {STEPS.map((s, i) => (
-              <AnimateOnScroll key={s.step} delay={`delay-${(i + 1) * 200}`}>
-                <div className="relative group p-8 rounded-3xl glass-dark hover:border-accent-blue/30 transition-all duration-500">
-                  <div className="text-6xl font-black text-accent-blue/15 absolute top-6 right-8 group-hover:text-accent-blue/25 transition-colors duration-500">
-                    {s.step}
-                  </div>
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 rounded-xl bg-accent-blue flex items-center justify-center text-white font-bold text-lg mb-6 shadow-lg shadow-accent-blue/25">
-                      {s.step}
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">{s.title}</h3>
-                    <p className="text-white/60 leading-relaxed">{s.desc}</p>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ════════════════════════ STATS ════════════════════════ */}
       <section className="py-20 md:py-28 bg-light-gray">
@@ -668,7 +471,6 @@ export default function Home() {
               {
                 title: "Product",
                 links: [
-                  "Features",
                   "Pricing",
                   "Integrations",
                   "Changelog",

@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import MarketplaceCreators from "../components/MarketplaceCreators";
 import {
   CATEGORIES_WITH_ALL,
   CREATORS_WITH_VIDEO,
@@ -279,6 +280,8 @@ export default function CreatorsPage() {
       <Navbar />
 
       <main className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-10">
+        <MarketplaceCreators />
+        <p className="text-center text-white/50 mb-6">Featured creator showcase</p>
         {/* Hero Header */}
         <div className="text-center max-w-4xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-xs sm:text-sm font-medium mb-6 backdrop-blur-sm">
